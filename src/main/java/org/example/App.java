@@ -7,10 +7,7 @@ import org.example.entities.Marca;
 
 import java.sql.Connection;
 
-/**
- * Hello world!
- *
- */
+
 public class App 
 {
     public static void main( String[] args )
@@ -24,11 +21,6 @@ public class App
     //Guardo en la BD
     AutoDAO autoDAO = new AutoDAO();
     autoDAO.insertarAuto(auto);
-    autoDAO.insertar
-
-
-
-
 
     Connection miConexion = AdministradorConexion.obtenerConexion();
 }

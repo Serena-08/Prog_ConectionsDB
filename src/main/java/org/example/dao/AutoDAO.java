@@ -1,5 +1,6 @@
 package org.example.dao;
 
+import com.mysql.cj.protocol.Resultset;
 import org.example.configuracion.AdministradorConexion;
 import org.example.entities.Auto;
 
@@ -56,16 +57,15 @@ public class AutoDAO {
     Result rs = null;
 
     try {
-      // paso 3 creaR INSTRUCCION
+      // paso 4 crear instrucción
       st = conn.createStatement();
 
-      //PaSO 4 EJECUTAR CONSULTA Y GUARDAR EL RESUTADO EN EL RESULLTSET
-
+      //PaSO 5 Ejecutar la consulta y guardar el resultado en el resultset
       rs = st.executeQuery(sql);
 
-      //paso 5 recorrer el resultset y guardar los autos en la lista
+      //paso 6 recorrer el resultset y guardar los autos en la lista
       while (rs.next()){
-        Auto auto = new auto ();
+        Auto auto = new Auto ();
         auto.setIdAuto(rs.getInt("Id"));
       }
 
