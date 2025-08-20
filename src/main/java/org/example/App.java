@@ -24,6 +24,7 @@ public class App
     //Guardo en la BD
     AutoDAO autoDAO = new AutoDAO();
     autoDAO.insertarAuto(auto);
+    autoDAO.insertar
 
 
 
