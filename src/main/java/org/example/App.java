@@ -6,21 +6,30 @@ import org.example.entities.Auto;
 import org.example.entities.Marca;
 
 import java.sql.Connection;
+import java.util.List;
 
 
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
-    }
+public class App {
+  public static void main(String[] args) {
 
-    Auto auto =
-        new Auto("CCCCCC", "Blanco", 2025, 897, Marca.Honda, "Fit");
+    System.out.println("Hello World!");
+    //Connection miConexion = AdministradorConexiones.obtenerConexion();
 
-    //Guardo en la BD
+    Auto auto = new Auto("CCCCCC", "Blanco", 2025, 897,
+        Marca.Honda, "Fit");
+
+    //guardo en la BD
     AutoDAO autoDAO = new AutoDAO();
     autoDAO.insertarAuto(auto);
 
-    Connection miConexion = AdministradorConexion.obtenerConexion();
+    //recorreo la lista de autos
+    List<Auto> miLista = autoDAO.findAll();
+    if (!miLista.isEmpty()) {
+      for (Auto auto1 : miLista) {
+        System.out.println(auto1.toString());
+      }
+    }
+  }
 }
+
+
