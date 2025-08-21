@@ -11,9 +11,17 @@ public class Auto implements Comparable {
 	private int kilometraje;
 	private Marca marca;
 	private String modelo;
-	
-	
-	
+
+	public Auto(int idAuto, String patente, String color, int anio, int kilometraje, Marca marca, String modelo) {
+		this.idAuto = idAuto;
+		this.patente = patente;
+		this.color = color;
+		this.anio = anio;
+		this.kilometraje = kilometraje;
+		this.marca = marca;
+		this.modelo = modelo;
+	}
+
 	public Auto(){
 		idAuto=-1;
 	}

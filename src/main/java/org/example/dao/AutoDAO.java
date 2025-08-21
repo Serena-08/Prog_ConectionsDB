@@ -19,7 +19,6 @@ public class AutoDAO {
   public void update(Auto auto){
 
     //Establecer la conexion
-    conn = AdministradorConexion.obtenerConexion();
 
     //Solo si el auto existe lo modifico
     if (this.existById(auto.getIdAuto())){
@@ -31,11 +30,31 @@ public class AutoDAO {
           "marca = '" + auto.getMarca() + "', " +
           "modelo = '" + auto.getModelo() + "' " +
           "WHERE idAuto = " + auto.getIdAuto();
+      conn = AdministradorConexion.obtenerConexion();
+
+
+      //Se crea el statement
+      Statement st = null;
+
+      try {
+        //Ejecuto
+        st = conn.createStatement();
+        st.execute(sql);
+
+        //Cierro.
+        st.close();
+        conn.close();
+
+      } catch (SQLException e) {
+        System.out.println("Error al crear el statement");
+        throw new RuntimeException(e);
+      }
+
     }
   }
 
   public boolean existById(int id){
-    //esta lecer conexion
+    //establecer conexion
     conn = AdministradorConexion.obtenerConexion();
     String sql = "SELECT * FROM autos WHERE idAuto = " + id;
     //Creamos statemant
@@ -145,4 +164,60 @@ public class AutoDAO {
 
     return listaAutos;
   }
+
+  public void delete(int idAuto){
+    conn = AdministradorConexion.obtenerConexion();
+    String sql = " DELETE FROM autos Where idAuto = " + idAuto;
+    Statement st = null;
+
+    try {
+      st = conn.createStatement();
+      st.execute(sql);
+      st.close();
+      conn.close();
+    } catch (SQLException e) {
+      System.out.println("Error al crear el statement");
+      throw new RuntimeException(e);
+    }
+  }
+
+  public boolean getById(int id){
+    //establecer conexion
+    conn = AdministradorConexion.obtenerConexion();
+    String sql = "SELECT * FROM autos WHERE idAuto = " + id;
+    //Creamos statemant
+    Statement st = null;
+    ResultSet rs = null;
+
+    try {
+      st = conn.createStatement();// CREO STATEMENT
+      rs = st.executeQuery(sql); //EJECUTO CONSULTA
+
+      Auto auto = null;
+      if (rs.next()){
+        //Asigno los datos al auto
+        auto.setIdAuto(rs.getInt("idAuto"));
+        auto.setPatente(rs.getString("patente"));
+        auto.setColor(rs.getString("color"));
+        auto.setMarca(Marca.valueOf(rs.getString("idAuto")));
+        auto.setAnio(rs.getInt("anio"));
+        auto.setKilometraje(rs.getInt("kilometraje"));
+
+      }
+
+      //CIERRRO RESULSET Y STATEMENT
+      rs.close();
+      st.close();
+      conn.close();
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    return existe;
+  }
+
+
+
+
 }

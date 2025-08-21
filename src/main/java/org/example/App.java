@@ -29,6 +29,27 @@ public class App {
         System.out.println(auto1.toString());
       }
     }
+
+    Auto autoAModificar = new Auto("AABBCC", "Gis", 2024, 897555, Marca.Honda, "Fit");
+
+    autoAModificar.setIdAuto(14);
+    autoDAO.update(autoAModificar);
+
+    autoDAO.update(autoAModificar);
+    autoDAO.delete(13);
+
+
+
+    //Recorro la lista de autos
+    miLista = autoDAO.findAll();
+    if (!miLista.isEmpty()) {
+      for (Auto auto1 : miLista) {
+        System.out.println(auto1.toString());
+      }
+    }
+
+
+
   }
 }
 
