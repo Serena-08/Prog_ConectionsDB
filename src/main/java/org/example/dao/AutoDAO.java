@@ -16,6 +16,54 @@ public class AutoDAO {
 
   private static Connection conn;
 
+  public void update(Auto auto){
+
+    //Establecer la conexion
+    conn = AdministradorConexion.obtenerConexion();
+
+    //Solo si el auto existe lo modifico
+    if (this.existById(auto.getIdAuto())){
+      String sql = "UPDATE autos SET " +
+          "patente = '" + auto.getPatente() + "', " +
+          "color = '" + auto.getColor() + "', " +
+          "anio = " + auto.getAnio() + ", " +
+          "kilometraje = " + auto.getKilometraje() + ", " +
+          "marca = '" + auto.getMarca() + "', " +
+          "modelo = '" + auto.getModelo() + "' " +
+          "WHERE idAuto = " + auto.getIdAuto();
+    }
+  }
+
+  public boolean existById(int id){
+    //esta lecer conexion
+    conn = AdministradorConexion.obtenerConexion();
+    String sql = "SELECT * FROM autos WHERE idAuto = " + id;
+    //Creamos statemant
+    Statement st = null;
+    ResultSet rs = null;
+    boolean existe = false;
+
+      try {
+        st = conn.createStatement();// CREO STATEMENT
+        rs = st.executeQuery(sql); //EJECUTO CONSULTA
+
+        //SI LA CONSULTA DEVUELVE AL MENOS UN REGISTRO, EXISTE
+        if (rs.next()){
+          existe = true;
+        }
+
+        //CIERRRO RESULSET Y STATEMENT
+        rs.close();
+        st.close();
+        conn.close();
+
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+
+    return existe;
+  }
+
   public void insertarAuto(Auto auto) {
     //1 establecer conexion a la base de datos
     conn = AdministradorConexion.obtenerConexion();
