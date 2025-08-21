@@ -36,7 +36,10 @@ public class App {
     autoDAO.update(autoAModificar);
 
     autoDAO.update(autoAModificar);
-    autoDAO.delete(13);
+    //autoDAO.delete(13);
+
+    System.out.println("Auto encontrado: " + autoDAO.getById(10).toString());
+    System.out.println("Lista de autos despues de la modificacion");
 
 
 

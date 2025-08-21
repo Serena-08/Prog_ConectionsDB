@@ -181,19 +181,19 @@ public class AutoDAO {
     }
   }
 
-  public boolean getById(int id){
+  public Auto getById(int id){
     //establecer conexion
     conn = AdministradorConexion.obtenerConexion();
     String sql = "SELECT * FROM autos WHERE idAuto = " + id;
     //Creamos statemant
     Statement st = null;
     ResultSet rs = null;
+    Auto auto = new Auto();
 
     try {
       st = conn.createStatement();// CREO STATEMENT
       rs = st.executeQuery(sql); //EJECUTO CONSULTA
 
-      Auto auto = null;
       if (rs.next()){
         //Asigno los datos al auto
         auto.setIdAuto(rs.getInt("idAuto"));
@@ -202,6 +202,7 @@ public class AutoDAO {
         auto.setMarca(Marca.valueOf(rs.getString("idAuto")));
         auto.setAnio(rs.getInt("anio"));
         auto.setKilometraje(rs.getInt("kilometraje"));
+        auto.setModelo(rs.getString("modelo"));
 
       }
 
@@ -214,7 +215,7 @@ public class AutoDAO {
       throw new RuntimeException(e);
     }
 
-    return existe;
+    return auto;
   }
 
 
