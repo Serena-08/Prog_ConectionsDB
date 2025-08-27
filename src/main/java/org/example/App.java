@@ -2,6 +2,7 @@ package org.example;
 
 import org.example.configuracion.AdministradorConexion;
 import org.example.dao.AutoDAO;
+import org.example.dao.AutoImpl;
 import org.example.entities.Auto;
 import org.example.entities.Marca;
 
@@ -39,5 +40,10 @@ public class App
         System.out.println(a.toString());
       }
     }
+
+
+    Auto autoTest = new Auto("CCCCCC", "Blanco", 2025, 0, Marca.Toyota, "Corolla");
+    AutoImpl autoImpl = new AutoImpl();
+    autoImpl.insert(autoTest);
   }
 }

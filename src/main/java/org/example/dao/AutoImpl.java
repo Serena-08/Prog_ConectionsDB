@@ -6,15 +6,25 @@ import org.example.entities.Marca;
 import org.example.interfaces.AdmConexion;
 import org.example.interfaces.DAO;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AutoImpl implements DAO<Auto,Integer>,AdmConexion{
   private Connection conn=null;
+
+  private static final String SQL_INSERT =
+      "INSERT INTO autos (idAuto,patente,color,anio,kilometraje,marca,modelo)" +
+          "VALUES      (?,     ?,    ?,   ?,     ?,   ?,   ?)";
+
+
+  private static final String SQL_UPDATE =
+      "UPDATE autos SET " +
+      "patente = ?, color = ?, anio = ?, kilometraje = ?"+ ", marca = ?, modelo = ?"+ "WHERE idAuto = ?";
+
+  private static final String SQL_DELETE= "DELETE FROM autos WHERE idAuto = ?";
+  private static final String SQL_GETALL= "SELECT * FROM autos ORDER BY patente";
+  private static final String SQL_GETBYID= "SELECT * FROM autos WHERE idAuto = ?";
 
   @Override
   public List<Auto> getAll() {
@@ -30,7 +40,7 @@ public class AutoImpl implements DAO<Auto,Integer>,AdmConexion{
     //establecer conexion a la base de datos
 
     //paso 2 crear String consulta SQL
-    String sql="INSERT INTO autos (idAuto,patente,color,anio,kilometraje,marca,modelo) " +
+    /*String sql="INSERT INTO autos (idAuto,patente,color,anio,kilometraje,marca,modelo) " +
         "VALUES (" + auto.getIdAuto() + "," +
         "'" + auto.getPatente() + "'," +
         "'" + auto.getColor() + "'," +
@@ -38,17 +48,37 @@ public class AutoImpl implements DAO<Auto,Integer>,AdmConexion{
         + auto.getKilometraje() + "," +
         "'" + auto.getMarca() + "'," +
         "'" + auto.getModelo() + "')" ;
+        /*
+     */
 
     //paso 3 crear instruccion
-    Statement st=null;
+    PreparedStatement pst=null;
     try {
-      st= conn.createStatement();
 
-      //paso 4 ejecutar instruccion
-      st.execute(sql);
+      //on la connecion llamo el preparestatemen pasandole la consulta sql
 
-      //paso 5 cerrar conexion
-      st.close();
+      pst = conn.prepareStatement(SQL_INSERT);
+      pst.setInt(1, auto.getIdAuto());
+      pst.setString(2, auto.getPatente());
+      pst.setString(3, auto.getColor());
+      pst.setInt(4, auto.getAnio());
+      pst.setInt(5, auto.getKilometraje());
+      pst.setString(6, auto.getMarca().toString());
+      pst.setString(7, auto.getModelo());
+
+
+
+     //Paso 4 ejecutar instruccion
+      //executeUpdate devuelve 1 si ejecuto correctamente
+      int resultado = pst.executeUpdate();
+      if (resultado == 1){
+        System.out.println("Auto insertado correctamente");
+      }else {
+        System.out.println("No se pudo insertar el auto");
+      }
+
+      //paso 5 cerrar coneccion
+      pst.close();
       conn.close();
 
     } catch (SQLException e) {
