@@ -12,24 +12,16 @@ public class Auto implements Comparable {
 	private Marca marca;
 	private String modelo;
 
-	public Auto(int idAuto, String patente, String color, int anio, int kilometraje, Marca marca, String modelo) {
-		this.idAuto = idAuto;
-		this.patente = patente;
-		this.color = color;
-		this.anio = anio;
-		this.kilometraje = kilometraje;
-		this.marca = marca;
-		this.modelo = modelo;
-	}
+
 
 	public Auto(){
 		idAuto=-1;
 	}
-	
-	
+
+
 	public Auto(String patente){
 		idAuto=-1;
-		this.patente= patente;		
+		this.patente= patente;
 	}
 
 	public Auto(String patente, String color, int anio, int kilometraje, Marca marca, String modelo) {
@@ -41,7 +33,14 @@ public class Auto implements Comparable {
 		this.marca = marca;
 		this.modelo = modelo;
 	}
-
+	public Auto(int id, String patente, String color, int anio, int kilometraje, Marca marca, String modelo) {
+		this.patente = patente;
+		this.color = color;
+		this.anio = anio;
+		this.kilometraje = kilometraje;
+		this.marca = marca;
+		this.modelo = modelo;
+	}
 	public int getIdAuto() {
 		return idAuto;
 	}
@@ -144,17 +143,17 @@ public class Auto implements Comparable {
 	@Override
 	public int compareTo(Object o) {
 		// -1  menor , 0 iguales  , 1 mayor
-		
+
 		Auto otroAuto= (Auto) o;
 		int resultado=Integer.compare(this.anio, otroAuto.anio);
-		
+
 		if(resultado ==0)
 			resultado= Integer.compare(this.kilometraje, otroAuto.kilometraje);
-			
-		
+
+
 		return resultado;
 	}
-	
-	
-	
+
+
+
 }

@@ -9,51 +9,35 @@ import java.sql.Connection;
 import java.util.List;
 
 
-public class App {
-  public static void main(String[] args) {
+public class App
+{
+  public static void main( String[] args ) {
 
-    System.out.println("Hello World!");
+    System.out.println( "Hello World!" );
+    //*
+
     //Connection miConexion = AdministradorConexiones.obtenerConexion();
+    //Auto auto = new Auto("CCCCC", "Blanco", 2025, 897, Marca.Honda, "Prius");
 
-    Auto auto = new Auto("CCCCCC", "Blanco", 2025, 897,
-        Marca.Honda, "Fit");
-
-    //guardo en la BD
     AutoDAO autoDAO = new AutoDAO();
-    autoDAO.insertarAuto(auto);
+    //AutoDAO.insertarAuto(auto);
 
-    //recorreo la lista de autos
-    List<Auto> miLista = autoDAO.findAll();
-    if (!miLista.isEmpty()) {
-      for (Auto auto1 : miLista) {
-        System.out.println(auto1.toString());
-      }
-    }
 
-    Auto autoAModificar = new Auto("AABBCC", "Gis", 2024, 897555, Marca.Honda, "Fit");
+    List<Auto> miLista=autoDAO.findAll();
 
-    autoAModificar.setIdAuto(14);
+
+    Auto autoAModificar =
+        new Auto(10,"BBBB", "Rojo", 2024, 111, Marca.Honda, "Prius");
     autoDAO.update(autoAModificar);
-
-    autoDAO.update(autoAModificar);
-    //autoDAO.delete(13);
+    autoDAO.delete(11);
 
     System.out.println("Auto encontrado: " + autoDAO.getById(10).toString());
-    System.out.println("Lista de autos despues de la modificacion");
-
-
 
     //Recorro la lista de autos
-    miLista = autoDAO.findAll();
-    if (!miLista.isEmpty()) {
-      for (Auto auto1 : miLista) {
-        System.out.println(auto1.toString());
+    if (!miLista.isEmpty()){
+      for (Auto a : miLista){
+        System.out.println(a.toString());
       }
     }
-
-
-
   }
 }
-
-
