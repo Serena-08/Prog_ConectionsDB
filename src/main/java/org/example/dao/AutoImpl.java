@@ -16,6 +16,7 @@ public class AutoImpl implements DAO<Auto,Integer>,AdmConexion{
       "INSERT INTO autos (patente,color,anio,kilometraje,marca,modelo) " +
           "VALUES (?, ?, ?, ?, ?, ?)";
 
+
   private static final String  SQL_UPDATE =
       "UPDATE autos SET " +
           "patente = ?" +
