@@ -1,6 +1,5 @@
 package org.example.interfaces;
 
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public interface DAO <O,K> {
   public void insert(O objeto);
   public void update(O objeto);
   public void delete(K id);
-  public O getById(K id);
+  public void getById(K id);
   public boolean existsById(K id);
 
 }
