@@ -11,6 +11,11 @@ public class Auto implements Comparable {
 	private int kilometraje;
 	private Marca marca;
 	private String modelo;
+	private Cliente cliente;
+
+	public Auto(){
+		this.cliente = new Cliente();
+	}
 
 
 

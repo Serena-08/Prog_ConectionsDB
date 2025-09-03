@@ -1,6 +1,8 @@
 package org.example.interfaces;
 
 
+import org.example.entities.Cliente;
+
 import java.util.List;
 
 public interface DAO <O,K> {
@@ -19,7 +21,7 @@ public interface DAO <O,K> {
   public void insert(O objeto);
   public void update(O objeto);
   public void delete(K id);
-  public void getById(K id);
+  public Cliente getById(K id);
   public boolean existsById(K id);
 
 }

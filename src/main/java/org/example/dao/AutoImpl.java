@@ -2,6 +2,7 @@ package org.example.dao;
 
 import org.example.configuracion.AdministradorConexion;
 import org.example.entities.Auto;
+import org.example.entities.Cliente;
 import org.example.entities.Marca;
 import org.example.interfaces.AdmConexion;
 import org.example.interfaces.DAO;
@@ -203,7 +204,7 @@ public class AutoImpl implements DAO<Auto,Integer>,AdmConexion{
   }
 
   @Override
-  public void getById(Integer id) {
+  public Cliente getById(Integer id) {
     //Establecer conexion
     conn=AdministradorConexion.obtenerConexion();
     String sql="SELECT * FROM autos WHERE idAuto= " + id;

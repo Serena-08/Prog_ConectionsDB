@@ -66,7 +66,4 @@ public class App {
   }
 
 
-  //Clientes
-  Cliente cliente = new Cliente(1, "Santiago", "Romero", 3482777);
-
 }

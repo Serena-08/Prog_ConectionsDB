@@ -1,104 +1,206 @@
 package org.example.dao;
 
-import org.example.configuracion.AdministradorConexion;
 import org.example.entities.Cliente;
 import org.example.interfaces.AdmConexion;
 import org.example.interfaces.DAO;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ClienteImpl implements DAO<Cliente, AdmConexion> {
+public class ClienteImpl implements AdmConexion, DAO<Cliente, Integer> {
   private Connection conn = null;
 
-  private static final String SQL_INSERT =
-      "INSERT INTO cliente (idCliente, nombre, apellido, telefono" +
-          "VALUES (?   , ?   , ?   , ?)";
-
-  private static final String SQL_UPDATE =
-      "UPDATE cleinte SET " +
-          "idCliente = ?" +
-          "nombre = ? " +
-          "apellido = ?" +
-          "telefono = ?";
-
-  private static final String SQL_DELETE = "DELETE FROM cliente WHERE idCliente = ?";
-  private static final String SQL_GETALL = "SELECT * FROM cliente ORDER BY apellido";
-  private static final String SQL_GETBYID = "SELECT * FROM cleinte WHERE idCliente = ?";
-
+  private static String SQL_INSERT =
+      "INSERT INTO clientes (nombre, apellido, telefono) " +
+          "VALUES (?, ?, ?)";
+  private static String SQL_UPDATE =
+      "UPDATE clientes SET" +
+          "nombre = ?," +
+          "apellido = ?," +
+          "telefono = ?" +
+          "WHERE idCliente = ?";
+  private static String SQL_DELETE = "DELETE FROM clientes WHERE idCliente = ?";
+  private static String SQL_GETALL = "SELECT * FROM clientes ORDER BY nombre";
+  private static String SQL_GETBYID = "SELECT * FROM clientes WHERE idCliente = ?";
+  private static String SQL_EXISTSBYID = "SELECT * FROM clientes WHERE idCliente = ?";
 
   @Override
   public List<Cliente> getAll() {
-    return Cliente;
+    conn = obtenerConexion();
+
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    List<Cliente> lista = new ArrayList<>();
+
+    try {
+      pst = conn.prepareStatement(SQL_GETALL);
+      rs = pst.executeQuery();
+
+      while (rs.next()) {
+        Cliente cliente = new Cliente();
+        cliente.setIdCliente(rs.getInt("idCliente"));
+        cliente.setNombre(rs.getString("nombre"));
+        cliente.setApellido(rs.getString("apellido"));
+        cliente.setTelefono(rs.getString("telefono"));
+
+        lista.add(cliente);
+      }
+
+      pst.close();
+      rs.close();
+      conn.close();
+    } catch (SQLException e) {
+      System.out.println("Error al crear el statement.");
+      throw new RuntimeException(e);
+    }
+    return lista;
   }
 
   @Override
   public void insert(Cliente objeto) {
-    Cliente cliente = objeto;
-    Connection obtenerConexion;
-    conn = obtenerConexion;
+    conn = obtenerConexion();
     PreparedStatement pst = null;
+    ResultSet rs = null;
+    Cliente cliente = objeto;
 
     try {
       pst = conn.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
-      pst.setInt(1, cliente.getIdCliente());
-      pst.setString(2, cliente.getNombre());
-      pst.setString(3, cliente.getApellido());
-      pst.setInt(4, cliente.getTelefono);
 
-      //4 Ejecutar instruccion
+      pst.setString(1, cliente.getNombre());
+      pst.setString(2, cliente.getApellido());
+      pst.setString(3, cliente.getTelefono());
+
       int resultado = pst.executeUpdate();
-      if (resultado == 1){
-        System.out.println("Cliente insertado correctamente");
+      if (resultado == 1) {
+        System.out.println("Cliente agregado correctamente.");
       } else {
-        System.out.println("No se pudo insertar el cliente");
+        System.out.println("No se pudo agregar el cliente.");
       }
 
-      ResultSet rs = pst.getGeneratedKeys();
-      if (rs.next()){
+      rs = pst.getGeneratedKeys();
+
+      if (rs.next()) {
         cliente.setIdCliente(rs.getInt(1));
-        System.out.println("El id asignado es: " + Cliente.getIdCliente);
+        System.out.println("El id asignado es: " + cliente.getIdCliente());
       }
 
-      //5 cerrar cinexion.
+      pst.close();
+      rs.close();
+      conn.close();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void update(Cliente objeto) {
+    conn = obtenerConexion();
+    if (this.existsById(objeto.getIdCliente())) {
+      try {
+        PreparedStatement pst = conn.prepareStatement(SQL_UPDATE);
+
+        pst.setString(1, objeto.getNombre());
+        pst.setString(2, objeto.getApellido());
+        pst.setString(3, objeto.getTelefono());
+        pst.setInt(4, objeto.getIdCliente());
+
+        int resultado = pst.executeUpdate();
+        if (resultado == 1) {
+          System.out.println("Cliente actualizado correctamente");
+        } else {
+          System.out.println("No se pudo actualizar el cliente");
+        }
+        pst.close();
+        conn.close();
+      } catch (SQLException e) {
+        System.out.println("Error al crear el statement");
+      }
+    }
+  }
+
+  @Override
+  public void delete(Integer id) {
+    conn = obtenerConexion();
+    try {
+      PreparedStatement pst = conn.prepareStatement(SQL_DELETE);
+      pst.setInt(1, id);
+      int resultado = pst.executeUpdate();
+
+      if (resultado == 1) {
+        System.out.println("Cliente eliminado correctamente");
+      } else {
+        System.out.println("No se pudo eliminar el cliente");
+      }
 
       pst.close();
       conn.close();
+    } catch (SQLException e) {
+      System.out.println("No se pudo eliminar el cliente. Error: " + e.getMessage());
+    }
+  }
 
+  @Override
+  public Cliente getById(Integer id) {
+    conn = obtenerConexion();
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    Cliente cliente = null;
+
+    try {
+      pst = conn.prepareStatement(SQL_EXISTSBYID);
+      pst.setInt(1, id);
+      rs = pst.executeQuery(); //ejecuto la consulta
+      //Si la consulta devuelve al menos 1 regristo, existe
+      if (rs.next()) {
+        cliente = new Cliente();
+        cliente.setIdCliente(rs.getInt("idCliente"));
+        cliente.setNombre((rs.getString("nombre")));
+        cliente.setApellido(rs.getString("apellido"));
+        cliente.setTelefono(rs.getString("telefono"));
+      }
+
+      pst.close();
+      rs.close();
+      conn.close();
 
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
 
+    return cliente;
   }
 
   @Override
-  public void update(Cliente objeto) {
-    Cliente cliente = objeto;
+  public boolean existsById(Integer id) {
+    conn = obtenerConexion();
+    // Se crea un statement
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    boolean existe = false;
 
+    try {
+      pst = conn.prepareStatement(SQL_GETBYID);
+      pst.setInt(1, id);
+      rs = pst.executeQuery(); // Ejecuto la consulta
+      //Si la consulta devuelve al menos 1 regristo, existe
+      if (rs.next()) {
+        existe = true;
+      }
 
-    if (this.existsById(cliente.getIdCliente())){
-      String sql = "UPDATE cliente SET" +
-          "nombre = '"+ cliente.getNombre() + "',";
-          "apellido = '"+ cliente.getApellido() + "',";
-
+      rs.close();
+      pst.close();
+      conn.close();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
     }
-
+    return existe;
   }
 
   @Override
-  public void delete(AdmConexion id) {
-
-  }
-
-  @Override
-  public void getById(AdmConexion id) {
-
-  }
-
-  @Override
-  public boolean existsById(AdmConexion id) {
-    return false;
+  public Connection obtenerConexion() {
+    return AdmConexion.super.obtenerConexion();
   }
 }
 
